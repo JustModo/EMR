@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "emr",
-    "slug": "emr",
+    "name": "EMR",
+    "slug": "EMR",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.justmodo.emr"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6fe1f338-f997-4b93-8eb3-be1c3a749c8d"
+      }
     }
   }
 }
