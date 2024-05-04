@@ -37,7 +37,7 @@ export default function SearchBar({ handlePress }) {
         // onChangeText={setSearchQuery}
       />
       <TouchableOpacity onPress={handlePress}>
-        <MaterialIcons name={"text-search"} color={"black"} size={40} />
+        <MaterialIcons name={"text-search"} color={"black"} size={35} />
       </TouchableOpacity>
     </View>
   );

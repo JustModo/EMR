@@ -5,13 +5,16 @@ export default function Logo({ opacity }) {
   return (
     <View
       style={{
-        height: 55,
-        width: 55,
+        height: 45,
+        width: 45,
         borderRadius: 5,
         padding: 5,
         marginLeft: 5,
         position: "absolute",
         opacity,
+        top: 5,
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <Image

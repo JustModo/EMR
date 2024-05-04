@@ -1,5 +1,5 @@
 import * as SQLite from "expo-sqlite";
-import { getData } from "./api";
+import { checkConnection, getData } from "./api";
 
 const db = SQLite.openDatabase("emr.db");
 
@@ -49,8 +49,10 @@ export const updateTable = async (HID) => {
         (_, result) => {
           if (result.rowsAffected > 0) {
             console.log("Data inserted successfully");
+            return true;
           } else {
             console.log("Skipped inserting duplicate RID:", RID);
+            return true;
           }
         },
         (_, error) => {

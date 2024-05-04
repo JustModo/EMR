@@ -15,13 +15,16 @@ export default function Notifs({ opacity, click }) {
         position: "absolute",
         opacity,
         right: 0,
+        top: 10,
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <TouchableOpacity onPress={click}>
         <MaterialIcons
-          name={"clipboard-list"}
+          name={"logout"}
           color={"white"}
-          size={45}
+          size={30}
           style={{ width: "100%", height: "100%", borderRadius: 5 }}
         />
       </TouchableOpacity>

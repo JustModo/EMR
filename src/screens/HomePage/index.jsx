@@ -64,21 +64,21 @@ export default function HomePage() {
   const handleLogout = () => {
     async function clear() {
       await AsyncStorage.removeItem("TOKEN");
+      logout();
     }
     clear();
-    logout();
   };
 
   return (
-    <SafeAreaView>
-      <StatusBar backgroundColor="#2bf598" auto />
+    <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor="transparent" translucent />
 
-      <View style={styles.container}>
-        <Image
-          source={require("../../../assets/bg.png")}
-          style={styles.image}
-          resizeMode="cover"
-        />
+      <Image
+        source={require("../../../assets/bg.png")}
+        style={styles.image}
+        resizeMode="cover"
+      />
+      <View>
         <View
           style={(styles.tab, { height: Aheight })}
           {...panResponder.panHandlers}
@@ -109,7 +109,7 @@ export default function HomePage() {
           scrollEnabled={Aheight <= 60}
           ref={scrollViewRef}
           onScroll={handleScroll}
-          {...panResponder.panHandlers}
+          // {...panResponder.panHandlers}
         >
           <View style={styles.holder}>
             <Text style={styles.subheading}>Book an Appointment</Text>

@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { useAssets } from "expo-asset";
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ContentTab({
   bgval,
@@ -12,7 +13,10 @@ export default function ContentTab({
   author,
   time,
   recordType,
+  title,
+  date,
 }) {
+  const navigation = useNavigation();
   const [Backdrop, setBackdrop] = useState(0);
 
   const [CID, setCID] = useState(cid);
@@ -20,6 +24,7 @@ export default function ContentTab({
   const [Author, setAuthor] = useState(author);
   const [TimeVal, setTimeVal] = useState(time);
   const [RecordName, setRecordName] = useState(recordType);
+  const [Title, setTitle] = useState(title);
 
   const iconarr = ["test-tube", "medical-bag", "file"];
 
@@ -34,8 +39,19 @@ export default function ContentTab({
     require("../../../../assets/yellow.jpg"),
   ]);
 
+  const handleClick = () => {
+    navigation.navigate("Content", {
+      CID,
+      Author,
+      TimeVal,
+      RecordName,
+      Title,
+      date,
+    });
+  };
+
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={handleClick}>
       {assets && (
         <Image
           source={{ uri: assets[Backdrop].localUri }}
@@ -66,7 +82,7 @@ export default function ContentTab({
           }}
         >
           <Text style={styles.heading} numberOfLines={1} ellipsizeMode="tail">
-            {RecordName}
+            {Title}
           </Text>
           <Text
             style={styles.subheading}

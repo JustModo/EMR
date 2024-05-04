@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View, RefreshControl } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,10 +8,14 @@ import { StatusBar } from "expo-status-bar";
 import { formatDate, formatTime } from "./scripts/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getDataDB, updateTable } from "./scripts/dbHandler";
+import BackButton from "../ContentPage/components/BackButton";
+import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../../navigation/AuthContext";
 
 export default function DashboardPage() {
   const [UI, setUI] = useState([]);
   const [HID, setHID] = useState("");
+  const navigation = useNavigation();
 
   async function handleClick() {
     //   // const data = await getData();
@@ -20,13 +24,15 @@ export default function DashboardPage() {
   }
 
   const [refreshing, setRefreshing] = useState(false);
+  // const [isOnline, setIsOnline] = useState(true);
 
   const handleRefresh = () => {
     setRefreshing(true);
     const refresh = async () => {
       try {
+        await updateTable(HID);
         const data = await getDataDB(HID);
-        console.log(data);
+        // console.log(data);
         if (data) {
           displayUI(data);
         } else {
@@ -38,12 +44,13 @@ export default function DashboardPage() {
         setRefreshing(false);
       }
     };
+    refresh();
   };
 
   const display = async (HID) => {
     try {
       const data = await getDataDB(HID);
-      console.log(data);
+      // console.log(data);
       if (data) {
         displayUI(data);
       } else {
@@ -91,15 +98,27 @@ export default function DashboardPage() {
   };
 
   return (
-    <SafeAreaView>
-      <StatusBar backgroundColor="#2bf598" auto />
+    <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor="transparent" translucent />
 
-      <View style={styles.container}>
-        <Image
-          source={require("../../../assets/bg.png")}
-          style={styles.image}
-          resizeMode="cover"
+      <Image
+        source={require("../../../assets/bg.png")}
+        style={styles.image}
+        resizeMode="cover"
+      />
+      {/* {!isOnline && (
+        <View
+          style={{
+            backgroundColor: "red",
+            position: "absolute",
+            height: 50,
+            width: 50,
+            left: 100,
+          }}
         />
+      )} */}
+      <BackButton style={{ top: 40 }} handleClick={() => navigation.goBack()} />
+      <View>
         <View style={styles.toptab}>
           <SearchBar handlePress={handleClick} />
         </View>
@@ -115,7 +134,17 @@ export default function DashboardPage() {
             <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           }
         >
-          {UI &&
+          {!UI ? (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator size="large" color="white" />
+            </View>
+          ) : (
             Object.entries(UI)
               .reverse()
               .map(([date, entries]) => (
@@ -147,12 +176,15 @@ export default function DashboardPage() {
                           rid={entry.RID}
                           author={entry.author}
                           recordType={entry.recordtype}
+                          title={entry.title}
                           time={formatTime(entry.date)}
+                          date={formatDate(date)}
                         />
                       </View>
                     ))}
                 </View>
-              ))}
+              ))
+          )}
         </ScrollView>
       </View>
     </SafeAreaView>

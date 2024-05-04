@@ -25,3 +25,20 @@ export async function getData() {
     // reject("Failed");
   }
 }
+
+export async function checkConnection() {
+  try {
+    const response = await fetch(`${baseUrl}/`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}

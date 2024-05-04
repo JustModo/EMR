@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 import HomePage from "../screens/HomePage";
 import DashboardPage from "../screens/DashboardPage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoginPage from "../screens/LoginPage";
 import { NavigationContainer } from "@react-navigation/native";
 import { AuthContext } from "./AuthContext";
+import ContentPage from "../screens/ContentPage";
 
 const Stack = createStackNavigator();
 
@@ -49,6 +53,7 @@ export default function AppNavigator() {
             <>
               <Stack.Screen name="HomePage" component={HomePage} />
               <Stack.Screen name="Dashboard" component={DashboardPage} />
+              <Stack.Screen name="Content" component={ContentPage} />
             </>
           )}
         </Stack.Navigator>
