@@ -3,7 +3,6 @@ import { createTable } from "../../DashboardPage/scripts/dbHandler";
 const baseUrl = "https://emr.modo-dev.com";
 
 export async function handleLogin(username, password) {
-  // Define the user credentials
   const credentials = {
     username,
     password,
@@ -28,10 +27,11 @@ export async function handleLogin(username, password) {
     const HID = JSON.parse(responseBody).HID;
     await AsyncStorage.setItem("TOKEN", token);
     await AsyncStorage.setItem("HID", HID);
+    await AsyncStorage.setItem("CREDS", JSON.stringify(credentials));
     createTable(HID);
     return true;
   } catch (error) {
-    // console.error(error);
+    console.error(error);
     reject("Failed");
   }
 }

@@ -1,14 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Button,
-  Image,
-  Modal,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { Image, StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,11 +7,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 import { getImage, getRecordData } from "./scripts/api";
 import BackButton from "./components/BackButton";
-import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import ImageTab from "./components/ImageTab";
-import DownloadButton from "./components/DownloadButton";
 import { AuthContext } from "../../navigation/AuthContext";
 import NoInternet from "./components/NoInternet";
+import ModalView from "./components/ModalView";
 
 export default function ContentPage() {
   const navigation = useNavigation();
@@ -28,7 +18,8 @@ export default function ContentPage() {
   const { CID, Author, TimeVal, RecordName, Title, date } = route.params;
   const [cid, setCid] = useState(CID);
   const [ImageData, setImageData] = useState(null);
-  const [TextData, setTextData] = useState([]);
+  const [TextData, setTextData] = useState(null);
+  const [UIElements, setUIElements] = useState(null);
 
   const { checkIsOnline, isOnline } = useContext(AuthContext);
 
@@ -36,20 +27,51 @@ export default function ContentPage() {
     navigation.goBack();
   };
 
+  const saveData = () => {
+    console.log("saved");
+  };
+
   useEffect(() => {
     const getData = async () => {
       const status = await checkIsOnline();
       if (!status) return;
+
       const data = await getRecordData(CID);
       if (!data) return;
-      // console.log(JSON.parse(data).text);
-      // setTextData(JSON.parse(data).text);
-      const path = JSON.parse(data).image;
+      setTextData(JSON.parse(data).text);
+
+      const parsedData = JSON.parse(data);
+      const path = parsedData.image;
       if (!path) return;
       await setImage(path);
     };
+
     getData();
   }, []);
+
+  useEffect(() => {
+    const updateUI = () => {
+      if (!TextData) return;
+      const data = JSON.parse(TextData);
+      return data.map((entry, index) => (
+        <View
+          key={index}
+          style={{
+            flex: 1,
+            width: "100%",
+            padding: 10,
+            flexDirection: "column",
+          }}
+        >
+          <Text style={{ fontWeight: "bold", fontSize: 16, color: "black" }}>
+            {entry.title}
+          </Text>
+          <Text style={{ fontSize: 16, color: "black" }}>{entry.content}</Text>
+        </View>
+      ));
+    };
+    setUIElements(updateUI());
+  }, [TextData]);
 
   async function setImage(path) {
     const image = await getImage(path);
@@ -61,14 +83,6 @@ export default function ContentPage() {
   }
 
   const [modalVisible, setModalVisible] = useState(false);
-
-  // useEffect(() => {
-  //   if (Object.keys(JsonText).length === 0) return;
-  //   Object.keys(JSON.parse(JsonText.text)).map((key) => {
-  //     console.log(key);
-  //     console.log(JSON.parse(JsonText.text)[key]);
-  //   });
-  // }, [JsonText]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,7 +98,9 @@ export default function ContentPage() {
         style={styles.image}
         resizeMode="cover"
       />
-      <BackButton style={{ top: 40 }} handleClick={handleClick} />
+      {!modalVisible && (
+        <BackButton style={{ top: 40 }} handleClick={handleClick} />
+      )}
       {!isOnline && <NoInternet style={{ top: 40 }} />}
 
       <View
@@ -125,84 +141,42 @@ export default function ContentPage() {
             {date}
           </Text>
         </View>
-        <ScrollView
-          style={styles.content}
-          contentContainerStyle={{
-            paddingBottom: 80,
-            rowGap: 10,
-            padding: 10,
-            alignItems: "center",
-          }}
-        >
-          {/* {TextData &&
-            TextData.map((obj, index) => (
-              <View key={index}>
-                {Object.entries(obj).map(([key, value]) => (
-                  <Text key={key}>
-                    Key: {key}, Value: {value}
-                  </Text>
-                ))}
-              </View>
-            ))} */}
-        </ScrollView>
+        {UIElements ? (
+          <ScrollView
+            style={styles.content}
+            contentContainerStyle={{
+              paddingBottom: 80,
+              rowGap: 10,
+              padding: 10,
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontWeight: "bold", fontSize: 20, color: "black" }}>
+              Report
+            </Text>
+            {UIElements}
+          </ScrollView>
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "white",
+            }}
+          >
+            <ActivityIndicator size="large" color="black" />
+          </View>
+        )}
         <ImageTab handleClick={() => setModalVisible(true)} />
       </View>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "black",
-          }}
-        >
-          {isOnline ? (
-            !ImageData ? (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <ActivityIndicator size="large" color="white" />
-              </View>
-            ) : (
-              <Image
-                source={{ uri: ImageData }}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  resizeMode: "contain",
-                }}
-                placeholder={"helo"}
-                transition={1000}
-              />
-            )
-          ) : (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-              }}
-            >
-              <MaterialIcons name={"wifi-alert"} color={"white"} size={50} />
-              <Text
-                style={{ fontWeight: "bold", fontSize: 30, color: "white" }}
-              >
-                Offline
-              </Text>
-            </View>
-          )}
-          <BackButton handleClick={() => setModalVisible(false)} />
-          {isOnline && <DownloadButton handleClick={handleClick} />}
-        </View>
-      </Modal>
+      <ModalView
+        modalVisible={modalVisible}
+        isOnline={isOnline}
+        ImageData={ImageData}
+        goBack={() => setModalVisible(false)}
+        saveData={saveData}
+      />
     </SafeAreaView>
   );
 }
@@ -217,10 +191,6 @@ const styles = StyleSheet.create({
   },
   content: {
     backgroundColor: "#ffffff",
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 50,
-    // height: "70%",
   },
   toptab: {
     backgroundColor: "white",

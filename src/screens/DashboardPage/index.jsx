@@ -18,7 +18,7 @@ export default function DashboardPage() {
   const [HID, setHID] = useState("");
   const navigation = useNavigation();
 
-  const { checkIsOnline, isOnline } = useContext(AuthContext);
+  const { checkIsOnline, isOnline, logout } = useContext(AuthContext);
 
   async function handleClick() {
     //   // const data = await getData();
@@ -34,7 +34,7 @@ export default function DashboardPage() {
       try {
         const status = await checkIsOnline();
         if (!status) return;
-        await updateTable(HID);
+        await updateTable(HID, logout);
         const data = await getDataDB(HID);
         // console.log(data);
         if (data) {
@@ -89,7 +89,7 @@ export default function DashboardPage() {
       await display(HID);
       const status = await checkIsOnline();
       if (!status) return;
-      await updateTable(HID);
+      await updateTable(HID, logout);
       await display(HID);
     }
     start();

@@ -37,22 +37,22 @@ export const getDataDB = (tableName) => {
   });
 };
 
-export const updateTable = async (HID) => {
-  const data = await getData();
+export const updateTable = async (HID, logout) => {
+  const data = await getData(logout);
   if (!data) return;
   db.transaction((tx) => {
     data.forEach((item) => {
       const { CID, RID, author, date, recordtype, title } = item;
       tx.executeSql(
-        `INSERT OR IGNORE INTO USER_${HID} (CID, RID, author, date, recordtype, title) VALUES (?, ?, ?, ?, ?, ?);`,
+        `INSERT OR REPLACE INTO USER_${HID} (CID, RID, author, date, recordtype, title) VALUES (?, ?, ?, ?, ?, ?);`,
         [CID, RID, author, date, recordtype, title],
         (_, result) => {
           if (result.rowsAffected > 0) {
-            console.log("Data inserted successfully");
+            console.log("Data inserted or replaced successfully");
             return true;
           } else {
-            console.log("Skipped inserting duplicate RID:", RID);
-            return true;
+            console.log("Error inserting or replacing data");
+            return false;
           }
         },
         (_, error) => {
