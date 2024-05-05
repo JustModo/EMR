@@ -150,6 +150,7 @@ export default function LoginPage({ navigation }) {
           placeholder="Password"
           value={Password}
           onChangeText={(text) => setPassword(text)}
+          secureTextEntry={true}
         />
         <TouchableOpacity
           style={{

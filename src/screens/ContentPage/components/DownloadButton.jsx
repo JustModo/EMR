@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default function DownloadButton({ handleClick, style }) {
+export default function DownloadButton({ handleClick, style, icon }) {
   return (
     <View
       style={{
@@ -16,8 +16,12 @@ export default function DownloadButton({ handleClick, style }) {
         ...style,
       }}
     >
-      <TouchableOpacity onPress={handleClick}>
-        <MaterialIcons name={"download"} color={"white"} size={30} />
+      <TouchableOpacity onPress={handleClick} disabled={icon}>
+        <MaterialIcons
+          name={icon ? "check-bold" : "download"}
+          color={"white"}
+          size={30}
+        />
       </TouchableOpacity>
     </View>
   );

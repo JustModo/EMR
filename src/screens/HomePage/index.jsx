@@ -64,6 +64,8 @@ export default function HomePage() {
   const handleLogout = () => {
     async function clear() {
       await AsyncStorage.removeItem("TOKEN");
+      await AsyncStorage.removeItem("HID");
+      await AsyncStorage.removeItem("CREDS");
       logout();
     }
     clear();

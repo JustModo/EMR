@@ -15,6 +15,16 @@ export const createTable = (tableName) => {
         console.log(`Error creating table USER_${tableName}:`, error);
       }
     );
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS CONTENT_${tableName} (CID INTEGER PRIMARY KEY, content TEXT, image TEXT);`,
+      [],
+      (_, result) => {
+        console.log(`Table CONTENT_${tableName} created successfully`);
+      },
+      (_, error) => {
+        console.log(`Error creating table USER_${tableName}:`, error);
+      }
+    );
   });
 };
 

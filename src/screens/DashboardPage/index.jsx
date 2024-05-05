@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View, RefreshControl } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  RefreshControl,
+  ActivityIndicator,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ContentTab from "./components/ContentTab";
@@ -14,7 +21,7 @@ import { AuthContext } from "../../navigation/AuthContext";
 import NoInternet from "../ContentPage/components/NoInternet";
 
 export default function DashboardPage() {
-  const [UI, setUI] = useState([]);
+  const [UI, setUI] = useState(null);
   const [HID, setHID] = useState("");
   const navigation = useNavigation();
 
@@ -115,34 +122,45 @@ export default function DashboardPage() {
 
       <BackButton style={{ top: 40 }} handleClick={() => navigation.goBack()} />
       {!isOnline && <NoInternet style={{ top: 40 }} />}
-      <View>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "white",
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
+        }}
+      >
         <View style={styles.toptab}>
           <SearchBar handlePress={handleClick} />
         </View>
-        <ScrollView
-          style={styles.content}
-          contentContainerStyle={{
-            paddingBottom: 80,
-            rowGap: 10,
-            alignItems: "center",
-            padding: 10,
-          }}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-          }
-        >
-          {!UI ? (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <ActivityIndicator size="large" color="white" />
-            </View>
-          ) : (
-            Object.entries(UI)
+        {!UI ? (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "white",
+            }}
+          >
+            <ActivityIndicator size="large" color="black" />
+          </View>
+        ) : (
+          <ScrollView
+            style={styles.content}
+            contentContainerStyle={{
+              paddingBottom: 80,
+              rowGap: 10,
+              alignItems: "center",
+              padding: 10,
+            }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+              />
+            }
+          >
+            {Object.entries(UI)
               .reverse()
               .map(([date, entries]) => (
                 <View
@@ -180,9 +198,9 @@ export default function DashboardPage() {
                       </View>
                     ))}
                 </View>
-              ))
-          )}
-        </ScrollView>
+              ))}
+          </ScrollView>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -190,8 +208,6 @@ export default function DashboardPage() {
 
 const styles = StyleSheet.create({
   image: {
-    width: "100%",
-    height: "100%",
     position: "absolute",
   },
   container: {

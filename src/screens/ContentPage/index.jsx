@@ -11,6 +11,13 @@ import ImageTab from "./components/ImageTab";
 import { AuthContext } from "../../navigation/AuthContext";
 import NoInternet from "./components/NoInternet";
 import ModalView from "./components/ModalView";
+import {
+  getContentTable,
+  updateContentTable,
+  updateImageinTable,
+} from "./scripts/dbHandler";
+import * as FileSystem from "expo-file-system";
+import * as Camera from "expo-camera";
 
 export default function ContentPage() {
   const navigation = useNavigation();
@@ -20,34 +27,146 @@ export default function ContentPage() {
   const [ImageData, setImageData] = useState(null);
   const [TextData, setTextData] = useState(null);
   const [UIElements, setUIElements] = useState(null);
-
+  const [ImagePath, setImagePath] = useState(null);
   const { checkIsOnline, isOnline } = useContext(AuthContext);
+  const [isDownloaded, setisDownloaded] = useState(false);
+  const [isImage, setisImage] = useState(true);
 
   const handleClick = () => {
     navigation.goBack();
   };
 
-  const saveData = () => {
+  const saveData = async () => {
     console.log("saved");
+    await getPerms();
   };
+
+  async function getPerms() {
+    const { status } = await Camera.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      console.error("Permission not granted!");
+      return;
+    }
+    fetchImage();
+  }
+
+  async function fetchImage() {
+    try {
+      if (ImageData) {
+        const imageBlob = await getImage(ImagePath);
+        const reader = new FileReader();
+        reader.readAsDataURL(imageBlob);
+        reader.onloadend = async () => {
+          const base64data = reader.result;
+          const base64WithoutPrefix = base64data.split(",")[1];
+          const directory = `${FileSystem.documentDirectory}EMR/`;
+          await FileSystem.makeDirectoryAsync(directory, {
+            intermediates: true,
+          });
+          const fileUri = `${directory}${cid}_image.jpg`;
+
+          await FileSystem.writeAsStringAsync(fileUri, base64WithoutPrefix, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+
+          // console.log(fileUri);
+          setImageData(fileUri);
+          await updateImageinTable({ CID: cid, image: fileUri });
+          setisDownloaded(true);
+        };
+      }
+    } catch (error) {
+      console.error("Error downloading image:", error);
+    }
+  }
 
   useEffect(() => {
     const getData = async () => {
-      const status = await checkIsOnline();
-      if (!status) return;
-
-      const data = await getRecordData(CID);
-      if (!data) return;
-      setTextData(JSON.parse(data).text);
-
-      const parsedData = JSON.parse(data);
-      const path = parsedData.image;
-      if (!path) return;
-      await setImage(path);
+      getContentTable(cid).then(async (data) => {
+        // console.log(data);
+        if (data.content) {
+          setTextData(data.content);
+          console.log("Got text from DB!");
+        } else {
+          const status = await checkIsOnline();
+          if (!status) return;
+          const data = await getRecordData(CID); //API FETCH
+          if (!data) return;
+          setTextData(JSON.parse(data).text);
+          await updateContentTable({
+            CID: cid,
+            content: JSON.parse(data).text,
+          }); //SAVE CONTENT
+          console.log("Got text from API!");
+        }
+        if (data.image) {
+          if (data.image === "nil") {
+            setisImage(false);
+            console.log("Got no image from FS!");
+            return;
+          }
+          const status = await checkFileExists(data.image);
+          if (status) {
+            setisDownloaded(true);
+            if (!data.image) {
+              console.log("No image");
+              setisImage(false);
+              return;
+            }
+            setImageData(data.image);
+            console.log("Got image from FS!");
+          } else {
+            console.log("File doesn't exist, clearing..");
+            updateImageinTable({ CID: cid, image: null });
+            const data = await getRecordData(CID); //API FETCH
+            if (!data) return;
+            await updateImage(data);
+            console.log("Got image from API");
+          }
+        } else {
+          const data = await getRecordData(CID); //API FETCH
+          if (!data) return;
+          await updateImage(data);
+          console.log("Got image from API");
+        }
+      });
     };
-
     getData();
   }, []);
+
+  const checkFileExists = async (filePath) => {
+    try {
+      const fileInfo = await FileSystem.getInfoAsync(filePath);
+      return fileInfo.exists;
+    } catch (error) {
+      console.error("Error checking file existence:", error);
+      return false;
+    }
+  };
+
+  async function updateImage(data) {
+    const parsedData = JSON.parse(data);
+    const path = parsedData.image;
+    if (!path) {
+      console.log("No image");
+      setisImage(false);
+      setImagePath(null);
+      await updateImageinTable({ CID: cid, image: "nil" });
+      return;
+    }
+    setImagePath(path);
+    await setImage(path);
+  }
+
+  async function setImage(path) {
+    const image = await getImage(path);
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImageData(reader.result);
+      setisImage(true);
+    };
+    reader.readAsDataURL(image);
+  }
 
   useEffect(() => {
     const updateUI = () => {
@@ -72,15 +191,6 @@ export default function ContentPage() {
     };
     setUIElements(updateUI());
   }, [TextData]);
-
-  async function setImage(path) {
-    const image = await getImage(path);
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImageData(reader.result);
-    };
-    reader.readAsDataURL(image);
-  }
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -168,7 +278,7 @@ export default function ContentPage() {
             <ActivityIndicator size="large" color="black" />
           </View>
         )}
-        <ImageTab handleClick={() => setModalVisible(true)} />
+        {isImage && <ImageTab handleClick={() => setModalVisible(true)} />}
       </View>
       <ModalView
         modalVisible={modalVisible}
@@ -176,6 +286,7 @@ export default function ContentPage() {
         ImageData={ImageData}
         goBack={() => setModalVisible(false)}
         saveData={saveData}
+        isDownloaded={isDownloaded}
       />
     </SafeAreaView>
   );

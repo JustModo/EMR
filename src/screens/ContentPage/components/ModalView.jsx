@@ -10,6 +10,7 @@ export default function ModalView({
   ImageData,
   goBack,
   saveData,
+  isDownloaded,
 }) {
   return (
     <Modal
@@ -24,7 +25,7 @@ export default function ModalView({
           backgroundColor: "black",
         }}
       >
-        {isOnline ? (
+        {isOnline || isDownloaded ? (
           !ImageData ? (
             <View
               style={{
@@ -63,8 +64,14 @@ export default function ModalView({
           </View>
         )}
         <BackButton style={{ top: 10 }} handleClick={goBack} />
-        {isOnline && (
-          <DownloadButton style={{ top: 10 }} handleClick={saveData} />
+        {isOnline || isDownloaded ? (
+          <DownloadButton
+            style={{ top: 10 }}
+            handleClick={saveData}
+            icon={isDownloaded}
+          />
+        ) : (
+          <></>
         )}
       </View>
     </Modal>
