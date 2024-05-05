@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   createStackNavigator,
   TransitionPresets,
@@ -30,34 +30,27 @@ export default function AppNavigator() {
     getToken();
   }, []);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const authContext = {
-    login: () => setIsLoggedIn(true),
-    logout: () => setIsLoggedIn(false),
-  };
+  const { isLoggedIn } = useContext(AuthContext);
 
   return (
-    <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={() => ({
-            headerShown: false,
-          })}
-        >
-          {!isLoggedIn ? (
-            <>
-              <Stack.Screen name="Login" component={LoginPage} />
-            </>
-          ) : (
-            <>
-              <Stack.Screen name="HomePage" component={HomePage} />
-              <Stack.Screen name="Dashboard" component={DashboardPage} />
-              <Stack.Screen name="Content" component={ContentPage} />
-            </>
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={() => ({
+          headerShown: false,
+        })}
+      >
+        {!isLoggedIn ? (
+          <>
+            <Stack.Screen name="Login" component={LoginPage} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="HomePage" component={HomePage} />
+            <Stack.Screen name="Dashboard" component={DashboardPage} />
+            <Stack.Screen name="Content" component={ContentPage} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

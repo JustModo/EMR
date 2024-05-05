@@ -11,11 +11,14 @@ import { getDataDB, updateTable } from "./scripts/dbHandler";
 import BackButton from "../ContentPage/components/BackButton";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../navigation/AuthContext";
+import NoInternet from "../ContentPage/components/NoInternet";
 
 export default function DashboardPage() {
   const [UI, setUI] = useState([]);
   const [HID, setHID] = useState("");
   const navigation = useNavigation();
+
+  const { checkIsOnline, isOnline } = useContext(AuthContext);
 
   async function handleClick() {
     //   // const data = await getData();
@@ -24,12 +27,13 @@ export default function DashboardPage() {
   }
 
   const [refreshing, setRefreshing] = useState(false);
-  // const [isOnline, setIsOnline] = useState(true);
 
   const handleRefresh = () => {
     setRefreshing(true);
     const refresh = async () => {
       try {
+        const status = await checkIsOnline();
+        if (!status) return;
         await updateTable(HID);
         const data = await getDataDB(HID);
         // console.log(data);
@@ -83,6 +87,8 @@ export default function DashboardPage() {
       const HID = await AsyncStorage.getItem("HID");
       setHID(HID);
       await display(HID);
+      const status = await checkIsOnline();
+      if (!status) return;
       await updateTable(HID);
       await display(HID);
     }
@@ -106,18 +112,9 @@ export default function DashboardPage() {
         style={styles.image}
         resizeMode="cover"
       />
-      {/* {!isOnline && (
-        <View
-          style={{
-            backgroundColor: "red",
-            position: "absolute",
-            height: 50,
-            width: 50,
-            left: 100,
-          }}
-        />
-      )} */}
+
       <BackButton style={{ top: 40 }} handleClick={() => navigation.goBack()} />
+      {!isOnline && <NoInternet style={{ top: 40 }} />}
       <View>
         <View style={styles.toptab}>
           <SearchBar handlePress={handleClick} />
@@ -225,5 +222,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
   },
 });

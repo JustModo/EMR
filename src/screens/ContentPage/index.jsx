@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   Image,
@@ -19,6 +19,8 @@ import BackButton from "./components/BackButton";
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import ImageTab from "./components/ImageTab";
 import DownloadButton from "./components/DownloadButton";
+import { AuthContext } from "../../navigation/AuthContext";
+import NoInternet from "./components/NoInternet";
 
 export default function ContentPage() {
   const navigation = useNavigation();
@@ -28,12 +30,16 @@ export default function ContentPage() {
   const [ImageData, setImageData] = useState(null);
   const [TextData, setTextData] = useState([]);
 
+  const { checkIsOnline, isOnline } = useContext(AuthContext);
+
   const handleClick = () => {
     navigation.goBack();
   };
 
   useEffect(() => {
     const getData = async () => {
+      const status = await checkIsOnline();
+      if (!status) return;
       const data = await getRecordData(CID);
       if (!data) return;
       // console.log(JSON.parse(data).text);
@@ -79,6 +85,8 @@ export default function ContentPage() {
         resizeMode="cover"
       />
       <BackButton style={{ top: 40 }} handleClick={handleClick} />
+      {!isOnline && <NoInternet style={{ top: 40 }} />}
+
       <View
         style={{
           flex: 1,
@@ -151,30 +159,48 @@ export default function ContentPage() {
             backgroundColor: "black",
           }}
         >
-          {!ImageData ? (
+          {isOnline ? (
+            !ImageData ? (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <ActivityIndicator size="large" color="white" />
+              </View>
+            ) : (
+              <Image
+                source={{ uri: ImageData }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  resizeMode: "contain",
+                }}
+                placeholder={"helo"}
+                transition={1000}
+              />
+            )
+          ) : (
             <View
               style={{
                 flex: 1,
                 alignItems: "center",
                 justifyContent: "center",
+                flexDirection: "column",
               }}
             >
-              <ActivityIndicator size="large" color="white" />
+              <MaterialIcons name={"wifi-alert"} color={"white"} size={50} />
+              <Text
+                style={{ fontWeight: "bold", fontSize: 30, color: "white" }}
+              >
+                Offline
+              </Text>
             </View>
-          ) : (
-            <Image
-              source={{ uri: ImageData }}
-              style={{
-                width: "100%",
-                height: "100%",
-                resizeMode: "contain",
-              }}
-              placeholder={"helo"}
-              transition={1000}
-            />
           )}
           <BackButton handleClick={() => setModalVisible(false)} />
-          <DownloadButton handleClick={handleClick} />
+          {isOnline && <DownloadButton handleClick={handleClick} />}
         </View>
       </Modal>
     </SafeAreaView>
