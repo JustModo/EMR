@@ -4,12 +4,12 @@
     "slug": "EMR",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -19,8 +19,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/logo.png",
+        "backgroundColor": "#000000"
       },
       "package": "com.justmodo.emr"
     },
@@ -29,7 +29,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "6fe1f338-f997-4b93-8eb3-be1c3a749c8d"
+        "projectId": "9430d3dd-c107-43fd-8aeb-357b4e041da1"
       }
     }
   }
