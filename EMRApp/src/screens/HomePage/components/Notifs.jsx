@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Image, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { AuthContext } from "../../../navigation/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Notifs({ opacity, click }) {
+export default function Notifs({ opacity }) {
+  const { logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    async function clear() {
+      try {
+        await AsyncStorage.removeItem("TOKEN");
+        await AsyncStorage.removeItem("HID");
+        await AsyncStorage.removeItem("CREDS");
+      } catch (error) {
+        console.error("Error clearing AsyncStorage:", error);
+      } finally {
+        logout();
+      }
+    }
+    clear();
+  };
+
   return (
     <View
       style={{
@@ -20,7 +39,7 @@ export default function Notifs({ opacity, click }) {
         justifyContent: "center",
       }}
     >
-      <TouchableOpacity onPress={click}>
+      <TouchableOpacity onPress={handleLogout}>
         <MaterialIcons
           name={"logout"}
           color={"white"}

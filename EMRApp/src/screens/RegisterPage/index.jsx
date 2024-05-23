@@ -3,14 +3,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button, Modal, Text, TouchableOpacity, View } from "react-native";
 import { Image, StyleSheet, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { handleLogin } from "./scripts/api";
 import { AuthContext } from "../../navigation/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link } from "@react-navigation/native";
+import { handleLogin, handleRegister } from "./scripts/api";
 
-export default function LoginPage({ navigation }) {
+export default function RegisterPage({ navigation }) {
   const [Username, setUsername] = useState("");
   const [Password, setPassword] = useState("");
+  const [ConPassword, setConPassword] = useState("");
+  const [Adhar, setAdhar] = useState("");
   const { login } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState("");
@@ -22,20 +24,41 @@ export default function LoginPage({ navigation }) {
     if (!Username.trim() || !Password.trim()) {
       setModalText("Username or Password can't be Blank!");
       setModalVisible(true);
-    } else {
-      setisAPI(true);
-      handleLogin(Username, Password)
-        .then(() => {
+      return;
+    }
+
+    if (Password.trim() != ConPassword.trim()) {
+      setModalText("Password Doesn't Match!");
+      setModalVisible(true);
+      return;
+    }
+    setisAPI(true);
+    handleRegister(Username, Password, Adhar)
+      .then((result) => {
+        if (result === true) {
           console.log("Success");
-          login();
-        })
-        .catch(() => {
-          console.log("Fail");
-          setModalText("Incorrect Details!");
+          handleLogin(Username, Password)
+            .then(() => {
+              console.log("Success");
+              login();
+            })
+            .catch(() => {
+              console.log("Fail");
+              setModalText("Incorrect Details!");
+              setModalVisible(true);
+              setisAPI(false);
+            });
+        } else {
+          setModalText(result);
           setModalVisible(true);
           setisAPI(false);
-        });
-    }
+        }
+      })
+      .catch((err) => {
+        setModalText("Unexpected Error!");
+        setModalVisible(true);
+        setisAPI(false);
+      });
   }
 
   useEffect(() => {
@@ -126,7 +149,7 @@ export default function LoginPage({ navigation }) {
       />
       <View
         style={{
-          flex: 5,
+          flex: 4,
           justifyContent: "flex-end",
           alignItems: "center",
           //   backgroundColor: "black",
@@ -154,9 +177,24 @@ export default function LoginPage({ navigation }) {
         />
         <TextInput
           style={styles.input}
+          placeholder="Aadhar Number"
+          value={Adhar}
+          onChangeText={(text) => setAdhar(text)}
+          textContentType="telephoneNumber"
+          inputMode="numeric"
+        />
+        <TextInput
+          style={styles.input}
           placeholder="Password"
           value={Password}
           onChangeText={(text) => setPassword(text)}
+          secureTextEntry={true}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Re-Enter Password"
+          value={ConPassword}
+          onChangeText={(text) => setConPassword(text)}
           secureTextEntry={true}
         />
         <TouchableOpacity
@@ -169,8 +207,9 @@ export default function LoginPage({ navigation }) {
             alignItems: "center",
           }}
           onPress={() => validate()}
+          disabled={isAPI}
         >
-          <Text style={styles.text}>{isAPI ? "..." : "Login"}</Text>
+          <Text style={styles.text}>{isAPI ? "..." : "Register"}</Text>
         </TouchableOpacity>
       </View>
       <View
@@ -194,13 +233,13 @@ export default function LoginPage({ navigation }) {
         }}
       >
         <Link
-          to={"/Register"}
+          to={"/Login"}
           style={{
             fontSize: 16,
             fontWeight: "bold",
           }}
         >
-          Register
+          Login
         </Link>
       </View>
     </SafeAreaView>

@@ -35,3 +35,31 @@ export async function handleLogin(username, password) {
     reject("Failed");
   }
 }
+
+export async function handleRegister(username, password, aadhar) {
+  const credentials = {
+    username: username.trim(),
+    password: password.trim(),
+    aadhar: aadhar.trim(),
+  };
+
+  try {
+    const response = await fetch(`${baseUrl}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+    const responseBody = await response.text();
+    return true;
+  } catch (error) {
+    console.error(error);
+    return error.message;
+  }
+}

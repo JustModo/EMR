@@ -10,6 +10,7 @@ import LoginPage from "../screens/LoginPage";
 import { NavigationContainer } from "@react-navigation/native";
 import { AuthContext } from "./AuthContext";
 import ContentPage from "../screens/ContentPage";
+import RegisterPage from "../screens/RegisterPage";
 
 const Stack = createStackNavigator();
 
@@ -42,6 +43,7 @@ export default function AppNavigator() {
         {!isLoggedIn ? (
           <>
             <Stack.Screen name="Login" component={LoginPage} />
+            <Stack.Screen name="Register" component={RegisterPage} />
           </>
         ) : (
           <>

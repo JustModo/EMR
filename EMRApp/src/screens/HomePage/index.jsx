@@ -59,18 +59,6 @@ export default function HomePage() {
     setScroll(y);
   };
 
-  const { logout } = useContext(AuthContext);
-
-  const handleLogout = () => {
-    async function clear() {
-      await AsyncStorage.removeItem("TOKEN");
-      await AsyncStorage.removeItem("HID");
-      await AsyncStorage.removeItem("CREDS");
-      logout();
-    }
-    clear();
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="transparent" translucent />
@@ -86,7 +74,7 @@ export default function HomePage() {
           {...panResponder.panHandlers}
         >
           <Logo opacity={1 - Opacity} />
-          <Notifs opacity={1 - Opacity} click={handleLogout} />
+          <Notifs opacity={1 - Opacity} />
           <ProfileCard opacity={Opacity} />
         </View>
         <View style={styles.toptab} {...panResponder.panHandlers}>

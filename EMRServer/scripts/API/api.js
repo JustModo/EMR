@@ -35,11 +35,11 @@ app.post("/register", async (req, res) => {
   const aadharExists = await checkExists("userData", "aadhar", aadhar);
 
   if (!usernameExists) {
-    return res.status(400).send("Exists Username");
+    return res.status(400).send("Username Exists!");
   }
 
   if (!aadharExists) {
-    return res.status(400).send("Exists Aadhar");
+    return res.status(400).send("Aadhar Already Registered!");
   }
 
   const hashedPassword = await hashPassword(password);
