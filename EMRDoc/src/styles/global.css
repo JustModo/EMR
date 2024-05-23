@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.mycontainer {
+  @apply w-screen h-screen flex bg-blue-400 pt-12 overflow-x-hidden;
+  background-color: rgb(240, 247, 250);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

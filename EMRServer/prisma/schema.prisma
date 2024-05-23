@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../Data/dev.db"
+}
+
+model UserData {
+  username String    @unique
+  password String
+  HID      BigInt    @unique
+  aadhar   BigInt    @unique
+  userinfo String?
+  Content  Content[]
+  Record   Record[]
+  UserInfo UserInfo?
+}
+
+model Record {
+  RID        BigInt   @unique
+  HID        BigInt
+  CID        BigInt   @unique
+  date       DateTime @default(now())
+  author     String
+  recordtype String
+  title      String
+  Content    Content  @relation(fields: [CID], references: [CID])
+  userData   UserData @relation(fields: [HID], references: [HID])
+}
+
+model UserInfo {
+  HID      BigInt   @unique
+  userdata String?
+  userData UserData @relation(fields: [HID], references: [HID])
+}
+
+model Content {
+  CID      BigInt   @unique
+  HID      BigInt
+  data     String
+  userData UserData @relation(fields: [HID], references: [HID])
+  Record   Record?
+}
