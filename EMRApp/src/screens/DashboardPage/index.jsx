@@ -6,8 +6,8 @@ import {
   View,
   RefreshControl,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ContentTab from "./components/ContentTab";
 import SearchBar from "./components/SearchBar";

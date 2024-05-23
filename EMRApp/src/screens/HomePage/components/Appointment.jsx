@@ -1,9 +1,11 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Image, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function Appointment() {
+  const navigation = useNavigation();
   return (
     <TouchableOpacity
       style={{
@@ -21,6 +23,7 @@ export default function Appointment() {
         margin: 5,
         justifyContent: "center",
       }}
+      onPress={() => navigation.navigate("Appoint")}
     >
       <Image
         source={require("../../../../assets/card3.png")}

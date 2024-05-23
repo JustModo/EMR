@@ -11,6 +11,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AuthContext } from "./AuthContext";
 import ContentPage from "../screens/ContentPage";
 import RegisterPage from "../screens/RegisterPage";
+import AppointPage from "../screens/AppointPage";
 
 const Stack = createStackNavigator();
 
@@ -50,6 +51,7 @@ export default function AppNavigator() {
             <Stack.Screen name="HomePage" component={HomePage} />
             <Stack.Screen name="Dashboard" component={DashboardPage} />
             <Stack.Screen name="Content" component={ContentPage} />
+            <Stack.Screen name="Appoint" component={AppointPage} />
           </>
         )}
       </Stack.Navigator>

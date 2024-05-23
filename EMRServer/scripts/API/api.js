@@ -17,6 +17,7 @@ const { hashPassword, verifyToken, upload } = require("../Utils/utilHandler");
 const PORT = 3000;
 const app = express();
 const fs = require("fs");
+const { log } = require("console");
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
