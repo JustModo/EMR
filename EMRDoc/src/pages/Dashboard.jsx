@@ -26,6 +26,9 @@ export default function Dashboard() {
 
   const [imageFile, setImageFile] = useState(null);
 
+  const [isVisible, setisVisible] = useState(false);
+  const [modalText, setmodalText] = useState(false);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -62,9 +65,11 @@ export default function Dashboard() {
     };
     if (imageFile) data.append("image", imageFile, "image.jpg");
     data.append("data", JSON.stringify(obj));
-    await uploadData(data);
+    const res = await uploadData(data);
+    // if (res) {
+    //   console.log(Hlo);
+    // }
   };
-
   return (
     <div className="mycontainer overflow-y-hidden">
       <div className="h-full bg-white xl:w-1/6 flex flex-col sm:w-1/2 pt-10">

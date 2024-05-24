@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import green from "@assets/blue3.png";
+import green from "@assets/bg2.png";
 import ImageCar from "../components/ImageCar";
 import LoginCard from "../components/LoginCard";
 import RegisterCard from "../components/RegisterCard";
