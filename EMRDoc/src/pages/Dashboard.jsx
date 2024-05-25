@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { CheckBox, Delete } from "@mui/icons-material";
 import { uploadData } from "../scripts/api";
+import green from "@assets/bg2.png";
 
 export default function Dashboard() {
   const [formData, setFormData] = useState({
@@ -77,25 +78,27 @@ export default function Dashboard() {
         <Divider />
       </div>
 
-      <div className="h-full w-full flex flex-col p-10 bg-base-300 overflow-y-scroll hide-scrollbar">
+      <div
+        className="h-full w-full flex flex-col p-10 bg-base-300 overflow-y-scroll hide-scrollbar bg-cover bg-center"
+        style={{ backgroundImage: `url(${green})` }}
+      >
         <form className="flex flex-col">
+          <h1 className="text-3xl pb-10 font-bold">Upload Records</h1>
           <div className="p-5 gap-5 flex">
             <TextField
               name="hid"
               label="HID"
-              variant="filled"
               type="number"
               required
               value={formData.hid}
               onChange={handleChange}
-              className="bg-base-100"
+              className="bg-white"
             />
           </div>
           <div className="p-5 gap-5 flex">
             <TextField
               name="title"
               id="title"
-              variant="filled"
               label="Title"
               value={formData.title}
               onChange={handleChange}
@@ -106,7 +109,7 @@ export default function Dashboard() {
               id="type"
               value={formData.type}
               onChange={handleChange}
-              className="w-52 bg-base-200"
+              className="w-52 bg-white"
               required
             >
               <MenuItem value={"Document"}>Document</MenuItem>
@@ -130,7 +133,6 @@ export default function Dashboard() {
                 <TextField
                   name="subheading"
                   id="subheading"
-                  variant="filled"
                   label="Subheading"
                   value={formData.subheading}
                   onChange={handleChange}
@@ -141,7 +143,6 @@ export default function Dashboard() {
                   label="Content"
                   multiline
                   rows={10}
-                  variant="filled"
                   value={formData.content}
                   onChange={handleChange}
                   className="bg-base-100"
@@ -151,7 +152,7 @@ export default function Dashboard() {
 
             <div className="flex items-center gap-3">
               <Button variant="outlined" component="label">
-                Upload Image
+                Upload Record
                 <input
                   type="file"
                   hidden

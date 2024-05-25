@@ -93,7 +93,7 @@ export default function HomePage() {
         <ScrollView
           style={styles.content}
           contentContainerStyle={{
-            paddingBottom: 80,
+            paddingBottom: 200,
             rowGap: 20,
           }}
           scrollEnabled={Aheight <= 60}
@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 50,
+    height: "100%",
   },
   toptab: {
     backgroundColor: "#ffffff",

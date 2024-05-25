@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react";
-import green from "@assets/bg2.png";
-import ImageCar from "../components/ImageCar";
 import LoginCard from "../components/LoginCard";
 import RegisterCard from "../components/RegisterCard";
 import { motion, AnimatePresence } from "framer-motion";
 import "../styles/global.css";
+
+import green from "@assets/bg2.png";
+
+import car from "@assets/loginimage.png";
 
 export default function Auth() {
   const [isLogin, setisLogin] = useState(true);
@@ -29,9 +31,10 @@ export default function Auth() {
               transition={{ duration: 0.2 }}
               className="w-11/12 h-3/4 flex flex-row items-center justify-center"
             >
-              <div className="w-1/3 h-full bg-white flex items-center justify-start rounded-tl-2xl rounded-bl-2xl bg-opacity-50 backdrop-blur-xl shadow-2xl min-w-80 min-h-80 overflow-hidden flex-col">
-                <ImageCar />
-              </div>
+              <div
+                className="w-1/3 h-full bg-cover bg-center bg-white flex items-center justify-start rounded-tl-2xl rounded-bl-2xl bg-opacity-50 backdrop-blur-xl shadow-2xl min-w-80 min-h-80 overflow-hidden flex-col"
+                style={{ backgroundImage: `url(${car})` }}
+              ></div>
               <div className="w-1/4 h-full bg-white flex items-center justify-start rounded-tr-2xl rounded-br-2xl bg-opacity-50 backdrop-blur-xl shadow-2xl min-w-80 min-h-80 p-10 flex-col">
                 <LoginCard parentFunc={handleToggle} />
               </div>

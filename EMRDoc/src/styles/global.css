@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .mycontainer {
-  @apply w-screen h-screen flex bg-blue-400 pt-12 overflow-x-hidden;
+  @apply w-screen h-screen flex bg-blue-400 pt-16 overflow-x-hidden;
   background-color: rgb(240, 247, 250);
 }
 

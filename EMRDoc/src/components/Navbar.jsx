@@ -12,6 +12,13 @@ export default function Navbar() {
       <div>
         <Link to="/">Home</Link>
       </div>
+
+      <div>
+        <Link to="/about">About</Link>
+      </div>
+      <div>
+        <Link to="/product">Product</Link>
+      </div>
       {isLogin ? (
         <div>
           <Link to="/dashboard">Dashboard</Link>
@@ -21,15 +28,6 @@ export default function Navbar() {
           <Link to="/auth">Login</Link>
         </div>
       )}
-      <div>
-        <Link to="/">About</Link>
-      </div>
-      <div>
-        <Link to="/">Product</Link>
-      </div>
-      <div>
-        <Link to="/">Contact Us</Link>
-      </div>
     </nav>
   );
 }
