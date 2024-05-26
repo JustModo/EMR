@@ -2,6 +2,7 @@ import React from "react";
 import bgimage from "../assets/doc.png";
 import bgimage1 from "../assets/bg2.png";
 import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
@@ -18,13 +19,15 @@ export default function Home() {
           electronic medical records efficiently and securely.
         </h4>
         <div className="w-72">
-          <Button
-            variant="contained"
-            size="medium"
-            style={{ backgroundColor: "rgb(93, 101, 215)", color: "#fff" }}
-          >
-            See more
-          </Button>
+          <Link to="/about">
+            <Button
+              variant="contained"
+              size="medium"
+              style={{ backgroundColor: "rgb(93, 101, 215)", color: "#fff" }}
+            >
+              See more
+            </Button>
+          </Link>
         </div>
       </div>
       <div

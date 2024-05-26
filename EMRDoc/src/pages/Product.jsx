@@ -8,10 +8,10 @@ export default function Product() {
       className="mycontainer bg-cover bg-center flex flex-row items-center justify-center gap-5"
       style={{ backgroundImage: `url(${green})` }}
     >
-      <div className="h-4/6 w-1/5 bg-purple-500 rounded-2xl flex flex-col items-center justify-start p-10 py-14 gap-10">
+      <div className="h-4/6 w-1/5 bg-purple-500 rounded-2xl flex flex-col items-center justify-start p-10 py-14 gap-10 overflow-hidden">
         <h1 className="font-bold text-white text-3xl">Basic Plan</h1>
         <h1 className="font-bold text-white text-sm">Price: $29/month</h1>
-        <div className="bg-white w-11/12 h-2/3 rounded-2xl p-5 flex justify-around items-center gap-5 flex-col">
+        <div className="bg-white w-11/12 h-2/3 rounded-2xl p-5 flex justify-around items-center gap-5 flex-col overflow-hidden">
           <ul className="text-black text-xs list-disc font-bold">
             <li>Patient records & history</li>
             <li>Appointment scheduling</li>
@@ -27,10 +27,10 @@ export default function Product() {
           </Button>
         </div>
       </div>
-      <div className="h-4/5 w-3/12 bg-purple-600 rounded-2xl flex flex-col items-center justify-start p-10 py-14 gap-10">
+      <div className="h-4/5 w-3/12 bg-purple-600 rounded-2xl flex flex-col items-center justify-start p-10 py-14 gap-10 overflow-hidden">
         <h1 className="font-bold text-white text-4xl">Standard Plan</h1>
         <h1 className="font-bold text-white text-md">Price: $59/month</h1>
-        <div className="bg-white w-11/12 h-2/3 rounded-2xl p-5 flex justify-around items-center gap-5 flex-col">
+        <div className="bg-white w-11/12 h-2/3 rounded-2xl p-5 flex justify-around items-center gap-5 flex-col overflow-hidden">
           <ul className="text-black text-sm list-disc font-bold">
             <li>All Basic features</li>
             <li>Lab & imaging integration</li>
@@ -47,10 +47,10 @@ export default function Product() {
           </Button>
         </div>
       </div>
-      <div className="h-4/6 w-1/5 bg-purple-500 rounded-2xl flex flex-col items-center justify-start p-10 py-14 gap-10">
+      <div className="h-4/6 w-1/5 bg-purple-500 rounded-2xl flex flex-col items-center justify-start p-10 py-14 gap-10 overflow-hidden">
         <h1 className="font-bold text-white text-3xl">Premium Plan</h1>
         <h1 className="font-bold text-white text-sm">Price: $99/month</h1>
-        <div className="bg-white w-11/12 h-2/3 rounded-2xl p-5 flex justify-around items-center gap-5 flex-col">
+        <div className="bg-white w-11/12 h-2/3 rounded-2xl p-5 flex justify-around items-center gap-5 flex-col overflow-hidden">
           <ul className="text-black text-xs list-disc font-bold">
             <li>All Standard features</li>
             <li>Advanced analytics</li>
