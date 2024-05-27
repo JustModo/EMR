@@ -5,14 +5,14 @@ import {
   Button,
   Checkbox,
   IconButton,
-  InputLabel,
   MenuItem,
   Select,
   TextField,
 } from "@mui/material";
-import { CheckBox, Delete } from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
 import { uploadData } from "../scripts/api";
 import green from "@assets/bg2.png";
+import MessageModal from "../components/ModalView";
 
 export default function Dashboard() {
   const [formData, setFormData] = useState({
@@ -28,7 +28,8 @@ export default function Dashboard() {
   const [imageFile, setImageFile] = useState(null);
 
   const [isVisible, setisVisible] = useState(false);
-  const [modalText, setmodalText] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -67,16 +68,34 @@ export default function Dashboard() {
     if (imageFile) data.append("image", imageFile, "image.jpg");
     data.append("data", JSON.stringify(obj));
     const res = await uploadData(data);
-    // if (res) {
-    //   console.log(Hlo);
-    // }
+    console.log(res);
+    if (res) {
+      setModalTitle("Success!");
+      setModalMessage("Data uploaded successfully!");
+      setisVisible(true);
+    } else {
+      setModalTitle("Error!");
+      setModalMessage("Failed to upload data!");
+      setisVisible(true);
+    }
   };
+
+  const handleCloseModal = () => {
+    setisVisible(false);
+  };
+
   return (
     <div className="mycontainer overflow-y-hidden">
       <div className="h-full bg-white xl:w-1/6 flex flex-col sm:w-1/2 pt-10">
         <ListContent />
         <Divider />
       </div>
+      <MessageModal
+        open={isVisible}
+        handleClose={handleCloseModal}
+        title={modalTitle}
+        message={modalMessage}
+      />
 
       <div
         className="h-full w-full flex flex-col p-10 bg-base-300 overflow-y-scroll hide-scrollbar bg-cover bg-center"

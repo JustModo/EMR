@@ -78,6 +78,7 @@ async function loginUser(username, password) {
     const token = generateToken(user.HID);
 
     const HID = String(user.HID);
+    console.log(HID);
 
     return { status: 200, message: { token, HID } };
   } catch (error) {
